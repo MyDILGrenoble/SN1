@@ -12,11 +12,6 @@ if (isset($_GET['id'])) {
         $illustration = isset($_POST['illustration']) ? $_POST['illustration'] : '';
         $createur = isset($_POST['createur']) ? $_POST['createur'] : '';
         $creation = isset($_POST['creation']) ? $_POST['creation'] : date('Y-m-d H:i:s');
-        var_dump($_POST);
-        echo ("<br>");
-        var_dump($_GET['id']);
-        echo ("<br>");
-        var_dump($_POST['id']);
         // Update the record
         $stmt = $pdo->prepare('UPDATE projet SET idProjet = ?, nomProjet = ?, descriptionProjet = ?, dateCreation = ? WHERE idProjet = ?');
         $stmt->execute([$id, $nom, $description, $creation, $_GET['id']]);
