@@ -2,20 +2,20 @@
 include 'functions.php';
 $pdo = pdo_connect_mysql();
 $msg = '';
-// Check if POST data is not empty
+// Vérifie si $_POST n'est pas vide
 if (!empty($_POST)) {
-    // Post data not empty insert a new record
-    // Set-up the variables that are going to be inserted, we must check if the POST variables exist if not we can default them to blank
+    // Pas vide -> insertion des nouvelles données
+    //Vérification des variables . Si vide -> NULL
     $id = isset($_POST['id']) && !empty($_POST['idProjet']) && $_POST['idProjet'] != 'auto' ? $_POST['idProjet'] : NULL;
-    // Check if POST variable "name" exists, if not default the value to blank, basically the same for all variables
+    // Vérification de nom
     $nom = isset($_POST['nom']) ? $_POST['nom'] : '';
     $description = isset($_POST['description']) ? $_POST['description'] : '';
-    //$phone = isset($_POST['illustration']) ? $_POST['illustration'] : '';
+    //$illustration = isset($_POST['illustration']) ? $_POST['illustration'] : '';
     $creation = isset($_POST['creation']) ? $_POST['creation'] : date('Y-m-d H:i:s');
-    // Insert new record into the contacts table
+    // Insertion dans la table projet
     $stmt = $pdo->prepare('INSERT INTO projet (idProjet, nomProjet, descriptionProjet, dateCreation) VALUES (?, ?, ?, ?)');
     $stmt->execute([$id, $nom, $description, $creation]);
-    // Output message
+    // Message de réussite
     $msg = 'Projet ajouté!';
 }
 ?>
