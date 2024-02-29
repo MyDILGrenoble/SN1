@@ -1,6 +1,6 @@
 # Projet solution web
 "Cahier des charges" :  
-Créer un "wiki" du MyDIL pour documenter las projets réalisés notamment lors des WorkShops et Opun Innovation  
+Créer un "wiki" du MyDIL pour documenter les projets réalisés notamment lors des WorkShops et Opun Innovation  
 On doit pouvoir  
 
     parcourir les projets  
