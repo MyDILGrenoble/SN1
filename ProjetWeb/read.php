@@ -2,12 +2,12 @@
 include 'functions.php';
 // Connection BDD
 $pdo = pdo_connect_mysql();
-// Get the page via GET request (URL param: page), if non exists default the page to 1
+// On récupère le n° de la page(URL param: page), s'il n'existe pas alors page=1
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-// Number of records to show on each page
+// Nombre d'enregistrements par page
 $records_per_page = 5;
 
-// Prepare the SQL statement and get records from our contacts table, LIMIT will determine the page
+// On prepare la requête SQL pour récupérer les enregistrements de la table projet, LIMIT determine la page
 
 $stmt = $pdo->prepare('SELECT * FROM projet ORDER BY idProjet LIMIT :current_page, :record_per_page');
 $stmt->bindValue(':current_page', ($page-1)*$records_per_page, PDO::PARAM_INT);
@@ -16,11 +16,11 @@ $stmt->bindValue(':record_per_page', $records_per_page, PDO::PARAM_INT);
 $stmt = $pdo->prepare('SELECT * FROM projet ORDER BY idProjet');
 */
 $stmt->execute();
-// Fetch the records so we can display them in our template.
+// On récupère les enregistrements pour les afficher.
 $projets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
-// Get the total number of contacts, this is so we can determine whether there should be a next and previous button
+// Obtenir le nombre total de projets, pour savoir s'il faut un bouton suivant/précédent
 $num_projets = $pdo->query('SELECT COUNT(*) FROM projet')->fetchColumn();
 ?>
 <?=template_header('Read')?>
