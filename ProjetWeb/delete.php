@@ -2,30 +2,30 @@
 include 'functions.php';
 $pdo = pdo_connect_mysql();
 $msg = '';
-// Check that the contact ID exists
+//Vérifie si l'ID existe
 if (isset($_GET['id'])) {
-    // Select the record that is going to be deleted
+    // Selectionne l'enregistrement à supprimer
     $stmt = $pdo->prepare('SELECT * FROM projet WHERE idProjet = ?');
     $stmt->execute([$_GET['id']]);
     $projet = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$projet) {
         exit('Aucun projet avec cet id!');
     }
-    // Make sure the user confirms beore deletion
+    // Demander confirmation avant suppression
     if (isset($_GET['confirm'])) {
-        if ($_GET['confirm'] == 'yes') {
-            // User clicked the "Yes" button, delete record
+        if ($_GET['confirm'] == 'oui') {
+            // L'utilisateur a clické sur le bouton "Oui", on supprime
             $stmt = $pdo->prepare('DELETE FROM projet WHERE idProjet = ?');
             $stmt->execute([$_GET['id']]);
             $msg = 'Le projet a été supprimé!';
         } else {
-            // User clicked the "No" button, redirect them back to the read page
+            // L'utilisateur a clické sur le bouton "Non", on renvoie à la liste
             header('Location: read.php');
             exit;
         }
     }
 } else {
-    exit('No ID specified!');
+    exit('Aucun Id spécifié!');
 }
 ?>
 <?=template_header('Delete')?>
@@ -37,8 +37,8 @@ if (isset($_GET['id'])) {
     <?php else: ?>
 	<p>Sûr de vouloir supprimer le projet #<?=$projet['idProjet']?>?</p>
     <div class="yesno">
-        <a href="delete.php?id=<?=$projet['idProjet']?>&confirm=yes">Yes</a>
-        <a href="delete.php?id=<?=$projet['idProjet']?>&confirm=no">No</a>
+        <a href="delete.php?id=<?=$projet['idProjet']?>&confirm=oui">Oui</a>
+        <a href="delete.php?id=<?=$projet['idProjet']?>&confirm=non">Non</a>
     </div>
     <?php endif; ?>
 </div>
