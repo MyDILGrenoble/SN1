@@ -2,7 +2,7 @@
 include 'functions.php';
 // 
 
-// Home Page template below.
+// Template page d'accueil
 ?>
 
 <?=template_header('Home')?>
