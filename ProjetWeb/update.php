@@ -5,19 +5,19 @@ $msg = '';
 // Vérifie si l'id du projet existe, par example update.php?id=1 récupère le projet dont l'id est 1
 if (isset($_GET['id'])) {
     if (!empty($_POST)) {
-        // This part is similar to the create.php, but instead we update a record and not insert
+        // Similaire à create.php, update à la place de insert
         $id = isset($_POST['id']) ? $_POST['id'] : NULL;
         $nom = isset($_POST['nom']) ? $_POST['nom'] : '';
         $description = isset($_POST['description']) ? $_POST['description'] : '';
         $illustration = isset($_POST['illustration']) ? $_POST['illustration'] : '';
         $createur = isset($_POST['createur']) ? $_POST['createur'] : '';
         $creation = isset($_POST['creation']) ? $_POST['creation'] : date('Y-m-d H:i:s');
-        // Update the record
+        // Mise à jour de l'enregistrement
         $stmt = $pdo->prepare('UPDATE projet SET idProjet = ?, nomProjet = ?, descriptionProjet = ?, dateCreation = ? WHERE idProjet = ?');
         $stmt->execute([$id, $nom, $description, $creation, $_GET['id']]);
         $msg = 'Projet mis à jour!';
     }
-    // Get the contact from the contacts table
+    // Récupère le projet de la table projet
     $stmt = $pdo->prepare('SELECT * FROM projet WHERE idProjet = ?');
     $stmt->execute([$_GET['id']]);
     $projet = $stmt->fetch(PDO::FETCH_ASSOC);
