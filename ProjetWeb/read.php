@@ -7,27 +7,54 @@ $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] :
 // Nombre d'enregistrements par page
 $records_per_page = 5;
 
-// On prepare la requête SQL pour récupérer les enregistrements de la table projet, LIMIT determine la page
 
-$stmt = $pdo->prepare('SELECT * FROM projet ORDER BY idProjet LIMIT :current_page, :record_per_page');
-$stmt->bindValue(':current_page', ($page-1)*$records_per_page, PDO::PARAM_INT);
+// Récupération des catégories
+//$pdo = pdo_connect_mysql();
+$stmt = $pdo->query('SELECT * FROM categorie');
+$categories = $stmt->fetchAll();
+
+// Vérification de la sélection de catégorie
+if (isset($_GET['categorie']) && !empty($_GET['categorie'])) {
+    $categorieFiltre = $_GET['categorie'];
+   // On prepare la requête SQL pour récupérer les enregistrements de la table projet, LIMIT determine la page 
+    $stmt = $pdo->prepare('SELECT * FROM projet p JOIN appartenir a ON p.idProjet = a.idProjet WHERE a.idCategorie = :categorie ORDER BY p.idProjet LIMIT :current_page, :record_per_page');
+    $stmt->bindValue(':current_page', ($page-1)*$records_per_page, PDO::PARAM_INT);
 $stmt->bindValue(':record_per_page', $records_per_page, PDO::PARAM_INT);
-/*
-$stmt = $pdo->prepare('SELECT * FROM projet ORDER BY idProjet');
-*/
+$stmt->bindValue(':categorie', $categorieFiltre);
+} else {
+    // Aucun filtre, récupération de tous les projets
+    //$stmt = $pdo->query('SELECT * FROM projet');
+    //$stmt = $pdo->prepare('SELECT * FROM projet ORDER BY idProjet LIMIT :current_page, :record_per_page');
+    $stmt = $pdo->prepare('SELECT * FROM projet ORDER BY idProjet LIMIT :current_page, :record_per_page');
+    $stmt->bindValue(':current_page', ($page-1)*$records_per_page, PDO::PARAM_INT);
+$stmt->bindValue(':record_per_page', $records_per_page, PDO::PARAM_INT);
+}
 $stmt->execute();
-// On récupère les enregistrements pour les afficher.
 $projets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
-// Obtenir le nombre total de projets, pour savoir s'il faut un bouton suivant/précédent
+// Get the total number of contacts, this is so we can determine whether there should be a next and previous button
 $num_projets = $pdo->query('SELECT COUNT(*) FROM projet')->fetchColumn();
 ?>
 <?=template_header('Read')?>
 
 <div class="content read">
 	<h2>Tous les projets</h2>
-	<a href="create.php" class="create-contact">Ajouter un projet</a>
+    <div class = 'caption'>
+        <a href="create.php" class="create-contact">Ajouter un projet</a>
+        <form method="get">
+            <select name="categorie" class='create-contact'>
+            <option value="">Toutes les catégories</option>
+            <?php 
+                foreach ($categories as $categorie) {
+                    $selected = ($categorieFiltre == $categorie['idCategorie']) ? 'selected' : '';
+                    echo '<option value="' . $categorie['idCategorie'] . '" ' . $selected . '>' . htmlspecialchars($categorie['label']) . '</option>';
+}
+?>
+</select>
+<input class="create-contact" type="submit" value="Filtrer">
+</form>
+    </div>
+	
 	<table>
         <thead>
             <tr>
