@@ -45,6 +45,9 @@ body {
 .navtop div a:hover {
     color: #ecf0f6;
 }
+.caption form{
+     display: inline-block;
+}
 .content {
     width: 1000px;
     margin: 0 auto;
